@@ -18,6 +18,9 @@ import type {
   TopicSlug,
   UnfollowList,
   UnfollowState,
+  PoolPreviewList,
+  Simulation,
+  ViewMix,
 } from "@/lib/types";
 
 const BASE = "/api/v1";
@@ -165,6 +168,9 @@ export const api = {
 
   recipe: () => request<Recipe>("GET", "/algorithm/recipe"),
   comparison: () => request<Comparison>("GET", "/algorithm/comparison"),
+  simulation: () => request<Simulation>("GET", "/algorithm/simulation"),
+  pools: () => request<PoolPreviewList>("GET", "/algorithm/pools"),
+  viewMix: () => request<ViewMix>("GET", "/me/view-mix"),
 
   report: (body: { subject_type: "post" | "comment"; subject_id: number; reason: ReportReason; note?: string | null }) =>
     request<{ id: number; status: Report["status"] }>("POST", "/reports", { body }),

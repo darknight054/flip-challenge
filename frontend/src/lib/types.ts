@@ -55,6 +55,13 @@ export interface PostDislikeState { post_id: number; dislike_count: number;
 export interface CommentDislikeState { comment_id: number; dislike_count: number; viewer_disliked: boolean }
 
 export interface Pool { code: ReasonCode; label: string; share: number; description: string }
+export interface Simulation { viewers: number; slate_size: number;
+                            creators: { id: number; username: string; display_name: string }[];
+                            rankers: { key: string; label: string; demo_only: boolean; slates: number[][] }[] }
+export interface PoolPreview { code: ReasonCode; label: string; share: number; description: string; posts: Post[] }
+export interface PoolPreviewList { active_version: string; pools: PoolPreview[] }
+export interface ViewMix { window_days: number; total_views: number; min_views: number;
+                           topics: { slug: TopicSlug; label: string; views: number }[] }
 export interface Recipe { active_version: string; pools: Pool[]; never_used: string[] }
 
 export interface ComparisonSlot { position: number; post_id: number; topic: TopicSlug;

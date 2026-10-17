@@ -25,7 +25,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.engine = make_engine(settings.database_url)
     app.state.rate_limiter = RateLimiter()
-    app.state.comparison_cache = None
+    app.state.simulation_cache = None
     install_error_handlers(app)
 
     @app.middleware("http")

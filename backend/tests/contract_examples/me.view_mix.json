@@ -1,0 +1,70 @@
+{
+  "endpoint": "GET /api/v1/me/view-mix",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "a week of scrolling",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "window_days": 7,
+          "total_views": 12,
+          "min_views": 5,
+          "topics": [
+            {
+              "slug": "tech",
+              "label": "Tech",
+              "views": 6
+            },
+            {
+              "slug": "politics_society",
+              "label": "Politics & Society",
+              "views": 4
+            },
+            {
+              "slug": "science",
+              "label": "Science",
+              "views": 2
+            },
+            {
+              "slug": "culture_arts",
+              "label": "Culture & Arts",
+              "views": 0
+            },
+            {
+              "slug": "sport",
+              "label": "Sport",
+              "views": 0
+            },
+            {
+              "slug": "food",
+              "label": "Food",
+              "views": 0
+            },
+            {
+              "slug": "places_travel",
+              "label": "Places & Travel",
+              "views": 0
+            },
+            {
+              "slug": "work_money",
+              "label": "Work & Money",
+              "views": 0
+            },
+            {
+              "slug": "health",
+              "label": "Health",
+              "views": 0
+            },
+            {
+              "slug": "everyday_life",
+              "label": "Everyday Life",
+              "views": 0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -232,3 +232,36 @@ def test_public_meta_endpoints(new_client) -> None:
     recipe = client.get(f"{API}/algorithm/recipe").json()
     assert [p["share"] for p in recipe["pools"]] == [0.3, 0.3, 0.2, 0.2]
     assert client.get(f"{API}/algorithm/comparison").status_code == 401
+
+
+# --- interactive "How it works" endpoints ------------------------------------------------------------
+
+
+def test_simulation_pools_and_view_mix(user_client) -> None:
+    authors = [user_client(f"author{a}")[0] for a in range(4)]
+    for a, client in enumerate(authors):
+        for i in range(3):
+            post(client, f"Post {i} by author{a}", ["science", "tech", "food", "sport"][(a + i) % 4])
+    viewer, _ = user_client("viewer")
+    viewer.put(f"{API}/users/author0/unfollow")
+
+    sim = viewer.get(f"{API}/algorithm/simulation").json()
+    creator_ids = {c["id"] for c in sim["creators"]}
+    assert [r["key"] for r in sim["rankers"]] == ["engagement-demo", "baseline-v0"]
+    for ranker in sim["rankers"]:
+        assert len(ranker["slates"]) == sim["viewers"] == 50
+        assert all(set(slate) <= creator_ids and len(slate) <= sim["slate_size"] for slate in ranker["slates"])
+
+    pools = viewer.get(f"{API}/algorithm/pools").json()
+    assert [p["code"] for p in pools["pools"]] == ["fresh", "underexposed", "discussion", "wildcard"]
+    shown = [p for pool in pools["pools"] for p in pool["posts"]]
+    assert len({p["id"] for p in shown}) == len(shown) and all(len(pool["posts"]) <= 3 for pool in pools["pools"])
+    assert all(p["author"]["username"] != "author0" for p in shown)  # unfollows still filter
+    feed = viewer.get(f"{API}/feed").json()
+    assert len(feed["items"]) == 9  # the preview delivered nothing: every eligible post is still unseen
+
+    seen = [{"post_id": i["post"]["id"]} for i in feed["items"][:4]]
+    viewer.post(f"{API}/feed/impressions", json={"items": seen})
+    mix = viewer.get(f"{API}/me/view-mix").json()
+    assert mix["total_views"] == 4 and sum(t["views"] for t in mix["topics"]) == 4 and len(mix["topics"]) == 10
+    assert [t["views"] for t in mix["topics"]] == sorted((t["views"] for t in mix["topics"]), reverse=True)

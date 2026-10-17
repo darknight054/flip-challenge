@@ -101,6 +101,12 @@ class BaselineV0:
             "wildcard": self._wildcard(cands, rng, now),
         }
 
+    def preview_pools(
+        self, candidates: Sequence[Candidate], now: datetime, history: ViewerHistory | None = None, seed: int = 0
+    ) -> dict[str, list[Candidate]]:
+        cands = sorted(candidates, key=lambda c: c.post_id)
+        return self._pools(cands, random.Random(seed), now, history) if cands else {}
+
     # --- slate assembly ---------------------------------------------------------------------------
 
     def build_slate(

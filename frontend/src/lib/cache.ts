@@ -6,6 +6,9 @@ export const qk = {
   topics: ["topics"] as const,
   recipe: ["recipe"] as const,
   comparison: ["comparison"] as const,
+  simulation: ["simulation"] as const,
+  pools: ["pool-preview"] as const,
+  viewMix: ["view-mix"] as const,
   feed: ["feed"] as const,
   /** Posts created this page load, pinned at the top of the feed (Q14). Client-only. */
   pinned: ["pinned-posts"] as const,

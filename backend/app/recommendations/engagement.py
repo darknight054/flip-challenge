@@ -19,6 +19,15 @@ class EngagementDemo:
         now: datetime,
         history: ViewerHistory | None = None,
     ) -> list[RankedPost]:
+        return [RankedPost(c.post_id, "popular") for c in self._ranked(candidates, now)[:count]]
+
+    def preview_pools(
+        self, candidates: Sequence[Candidate], now: datetime, history: ViewerHistory | None = None, seed: int = 0
+    ) -> dict[str, list[Candidate]]:
+        return {"popular": self._ranked(candidates, now)}
+
+    @staticmethod
+    def _ranked(candidates: Sequence[Candidate], now: datetime) -> list[Candidate]:
         def score(c: Candidate) -> float:
             age_hours = max((now - c.created_at).total_seconds() / 3600, 0.0)
             return (
@@ -28,5 +37,4 @@ class EngagementDemo:
                 - 0.002 * age_hours
             )
 
-        ranked = sorted(candidates, key=lambda c: (-score(c), c.post_id))
-        return [RankedPost(c.post_id, "popular") for c in ranked[:count]]
+        return sorted(candidates, key=lambda c: (-score(c), c.post_id))

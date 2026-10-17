@@ -24,6 +24,7 @@ def gini(values: Sequence[float]) -> float:
 @dataclass(frozen=True)
 class SimulationResult:
     shown: list[RankedPost]
+    slates: list[list[int]]  # author ids each simulated viewer was shown, in slot order
     attention_gap: float
     topics_covered: int
     distinct_creators: int
@@ -42,6 +43,7 @@ def simulate(
     author_views: Counter[int] = Counter()
     exposure: Counter[int] = Counter({c.author_id: 0 for c in candidates})
     first: list[RankedPost] = []
+    slates: list[list[int]] = []
 
     for viewer in range(viewers):
         current = [
@@ -55,6 +57,7 @@ def simulate(
         slate = recommender.build_slate(current, slate_size, seed=viewer, now=now)
         if viewer == 0:
             first = slate[:shown]
+        slates.append([by_id[item.post_id].author_id for item in slate])
         for item in slate:
             author = by_id[item.post_id].author_id
             post_views[item.post_id] += 1
@@ -64,6 +67,7 @@ def simulate(
     shown_posts = [by_id[item.post_id] for item in first]
     return SimulationResult(
         shown=first,
+        slates=slates,
         attention_gap=round(gini(list(exposure.values())), 2),
         topics_covered=len({c.topic for c in shown_posts}),
         distinct_creators=len({c.author_id for c in shown_posts}),

@@ -60,3 +60,9 @@ class Recommender(Protocol):
         now: datetime,
         history: ViewerHistory | None = None,
     ) -> list[RankedPost]: ...
+
+    def preview_pools(
+        self, candidates: Sequence[Candidate], now: datetime, history: ViewerHistory | None = None, seed: int = 0
+    ) -> dict[str, list[Candidate]]:
+        """Each pool's ordered candidates, without assembling a slate (for "How it works")."""
+        ...

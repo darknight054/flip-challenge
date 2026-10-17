@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 
 from app.core.deps import AppSettings, CurrentUser, DbSession
 from app.core.topics import TOPICS
-from app.schemas import Comparison, Health, Recipe, TopicList, TopicOut
+from app.schemas import Comparison, Health, PoolPreviewList, Recipe, Simulation, TopicList, TopicOut
 from app.services import algorithm
 
 router = APIRouter(tags=["meta"])
@@ -26,3 +26,13 @@ def recipe(settings: AppSettings) -> Recipe:
 @router.get("/algorithm/comparison", response_model=Comparison)
 def comparison(request: Request, db: DbSession, settings: AppSettings, _: CurrentUser) -> Comparison:
     return algorithm.comparison(db, settings, request)
+
+
+@router.get("/algorithm/simulation", response_model=Simulation)
+def simulation(request: Request, db: DbSession, settings: AppSettings, _: CurrentUser) -> Simulation:
+    return algorithm.simulation(db, settings, request)
+
+
+@router.get("/algorithm/pools", response_model=PoolPreviewList)
+def pool_preview(db: DbSession, settings: AppSettings, viewer: CurrentUser) -> PoolPreviewList:
+    return algorithm.pool_preview(db, settings, viewer)

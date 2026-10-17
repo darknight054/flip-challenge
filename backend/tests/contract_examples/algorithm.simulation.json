@@ -1,0 +1,98 @@
+{
+  "endpoint": "GET /api/v1/algorithm/simulation",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "two rankers, three viewers (trimmed)",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "viewers": 3,
+          "slate_size": 3,
+          "creators": [
+            {
+              "id": 7,
+              "username": "tomas",
+              "display_name": "Tomas Reyes"
+            },
+            {
+              "id": 12,
+              "username": "ade",
+              "display_name": "Ade Okafor"
+            },
+            {
+              "id": 15,
+              "username": "rin",
+              "display_name": "Rin Sato"
+            },
+            {
+              "id": 30,
+              "username": "lee",
+              "display_name": "Lee Park"
+            }
+          ],
+          "rankers": [
+            {
+              "key": "engagement-demo",
+              "label": "Engagement-style",
+              "demo_only": true,
+              "slates": [
+                [
+                  30,
+                  30,
+                  7
+                ],
+                [
+                  30,
+                  7,
+                  30
+                ],
+                [
+                  30,
+                  30,
+                  7
+                ]
+              ]
+            },
+            {
+              "key": "baseline-v0",
+              "label": "Serendipity",
+              "demo_only": false,
+              "slates": [
+                [
+                  15,
+                  12,
+                  7
+                ],
+                [
+                  30,
+                  15,
+                  12
+                ],
+                [
+                  12,
+                  7,
+                  15
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "not logged in",
+      "request": {},
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "unauthenticated",
+            "message": "Log in to continue."
+          }
+        }
+      }
+    }
+  ]
+}

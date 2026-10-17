@@ -1,0 +1,65 @@
+{
+  "endpoint": "GET /api/v1/algorithm/pools",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "what each pool would pick for you",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "active_version": "seen-least-v1",
+          "pools": [
+            {
+              "code": "fresh",
+              "label": "Fresh",
+              "share": 0.24,
+              "description": "New posts and new voices.",
+              "posts": [
+                {
+                  "id": 42,
+                  "author": {
+                    "id": 7,
+                    "username": "tomas",
+                    "display_name": "Tomas Reyes",
+                    "avatar_url": null,
+                    "is_synthetic": true
+                  },
+                  "body": "The lab replicated last spring's result, at half the effect size. That's still worth knowing.",
+                  "topic": "science",
+                  "created_at": "2026-10-17T07:02:11Z",
+                  "updated_at": null,
+                  "reply_count": 4,
+                  "dislike_count": 2,
+                  "dislike_reasons": {
+                    "disagree": 1,
+                    "low_effort": 0,
+                    "not_for_me": 1,
+                    "none": 0
+                  },
+                  "viewer_dislike": null,
+                  "viewer_has_unfollowed_author": false,
+                  "is_own": false
+                }
+              ]
+            },
+            {
+              "code": "discussion",
+              "label": "Discussion",
+              "share": 0.16,
+              "description": "Replies from 3+ different people.",
+              "posts": []
+            },
+            {
+              "code": "outside_your_usual",
+              "label": "Outside your usual",
+              "share": 0.2,
+              "description": "Topics and voices you've seen least lately.",
+              "posts": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

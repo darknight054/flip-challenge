@@ -364,6 +364,52 @@ class Comparison(Schema):
     rankers: list[RankerOut]
 
 
+class SimCreator(Schema):
+    id: int
+    username: str
+    display_name: str
+
+
+class SimRanker(Schema):
+    key: str
+    label: str
+    demo_only: bool
+    slates: list[list[int]]  # per simulated viewer: author ids shown, in slot order
+
+
+class Simulation(Schema):
+    viewers: int
+    slate_size: int
+    creators: list[SimCreator]
+    rankers: list[SimRanker]
+
+
+class PoolPreview(Schema):
+    code: ReasonCode
+    label: str
+    share: float
+    description: str
+    posts: list[PostOut]
+
+
+class PoolPreviewList(Schema):
+    active_version: str
+    pools: list[PoolPreview]
+
+
+class TopicViews(Schema):
+    slug: TopicSlug
+    label: str
+    views: int
+
+
+class ViewMix(Schema):
+    window_days: int
+    total_views: int
+    min_views: int  # recent views needed before "Outside your usual" switches on
+    topics: list[TopicViews]  # all topics, most viewed first
+
+
 # --- reports and moderation -----------------------------------------------------------------------
 
 

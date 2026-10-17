@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from app.core.deps import CurrentUser, DbSession
-from app.schemas import MeUpdateIn, UnfollowList, UserEnvelope
-from app.services import reactions
+from app.core.deps import AppSettings, CurrentUser, DbSession
+from app.schemas import MeUpdateIn, UnfollowList, UserEnvelope, ViewMix
+from app.services import algorithm, reactions
 from app.services.serializers import me_out
 
 router = APIRouter(prefix="/me", tags=["me"])
@@ -28,3 +28,8 @@ def update_me(data: MeUpdateIn, user: CurrentUser, db: DbSession) -> UserEnvelop
 @router.get("/unfollows", response_model=UnfollowList)
 def my_unfollows(user: CurrentUser, db: DbSession) -> UnfollowList:
     return reactions.list_unfollows(db, user)
+
+
+@router.get("/view-mix", response_model=ViewMix)
+def my_view_mix(user: CurrentUser, db: DbSession, settings: AppSettings) -> ViewMix:
+    return algorithm.view_mix(db, settings, user)
