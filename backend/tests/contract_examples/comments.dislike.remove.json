@@ -1,0 +1,22 @@
+{
+  "endpoint": "DELETE /api/v1/comments/{id}/dislike",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "removed",
+      "request": {
+        "path": {
+          "id": 901
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "comment_id": 901,
+          "dislike_count": 1,
+          "viewer_disliked": false
+        }
+      }
+    }
+  ]
+}

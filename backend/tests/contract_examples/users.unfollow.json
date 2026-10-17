@@ -1,0 +1,39 @@
+{
+  "endpoint": "PUT /api/v1/users/{username}/unfollow",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "unfollowed",
+      "request": {
+        "path": {
+          "username": "kit"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "username": "kit",
+          "unfollowed": true,
+          "unfollowed_at": "2026-10-17T09:50:00Z"
+        }
+      }
+    },
+    {
+      "name": "yourself",
+      "request": {
+        "path": {
+          "username": "mara"
+        }
+      },
+      "response": {
+        "status": 422,
+        "body": {
+          "error": {
+            "code": "self_unfollow",
+            "message": "You can't unfollow yourself."
+          }
+        }
+      }
+    }
+  ]
+}

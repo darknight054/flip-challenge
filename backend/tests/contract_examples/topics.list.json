@@ -1,0 +1,57 @@
+{
+  "endpoint": "GET /api/v1/topics",
+  "auth": "none",
+  "cases": [
+    {
+      "name": "fixed list",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "slug": "science",
+              "label": "Science"
+            },
+            {
+              "slug": "tech",
+              "label": "Tech"
+            },
+            {
+              "slug": "politics_society",
+              "label": "Politics & Society"
+            },
+            {
+              "slug": "culture_arts",
+              "label": "Culture & Arts"
+            },
+            {
+              "slug": "sport",
+              "label": "Sport"
+            },
+            {
+              "slug": "food",
+              "label": "Food"
+            },
+            {
+              "slug": "places_travel",
+              "label": "Places & Travel"
+            },
+            {
+              "slug": "work_money",
+              "label": "Work & Money"
+            },
+            {
+              "slug": "health",
+              "label": "Health"
+            },
+            {
+              "slug": "everyday_life",
+              "label": "Everyday Life"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

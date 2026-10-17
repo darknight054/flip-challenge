@@ -1,0 +1,30 @@
+[project]
+name = "serendipity-api"
+version = "0.1.0"
+description = "Serendipity API: an unfollow-only, dislike-only social network"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.20.0",
+    "argon2-cffi>=25.1.0",
+    "fastapi[standard]>=0.143.3",
+    "pydantic-settings>=2.16.0",
+    "sqlmodel>=0.0.48",
+]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+extend-exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

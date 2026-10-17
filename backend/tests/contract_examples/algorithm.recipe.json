@@ -1,0 +1,49 @@
+{
+  "endpoint": "GET /api/v1/algorithm/recipe",
+  "auth": "none",
+  "cases": [
+    {
+      "name": "baseline",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "active_version": "baseline-v0",
+          "pools": [
+            {
+              "code": "fresh",
+              "label": "Fresh",
+              "share": 0.3,
+              "description": "New posts and new voices."
+            },
+            {
+              "code": "underexposed",
+              "label": "Underexposed",
+              "share": 0.3,
+              "description": "Voices few people have seen."
+            },
+            {
+              "code": "discussion",
+              "label": "Discussion",
+              "share": 0.2,
+              "description": "Replies from 3+ different people."
+            },
+            {
+              "code": "wildcard",
+              "label": "Wildcard",
+              "share": 0.2,
+              "description": "Picked at random."
+            }
+          ],
+          "never_used": [
+            "Likes (there are none)",
+            "Who you unfollowed",
+            "Who disliked what",
+            "Dislike counts",
+            "Popularity of any kind"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "endpoint": "GET /api/v1/health",
+  "auth": "none",
+  "cases": [
+    {
+      "name": "ok",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "version": "0.1.0"
+        }
+      }
+    }
+  ]
+}

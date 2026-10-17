@@ -1,0 +1,47 @@
+{
+  "endpoint": "GET /api/v1/me/unfollows",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "two unfollowed",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "user": {
+                "id": 21,
+                "username": "kit",
+                "display_name": "Kit Lowe",
+                "avatar_url": null,
+                "is_synthetic": true
+              },
+              "unfollowed_at": "2026-10-17T09:50:00Z"
+            },
+            {
+              "user": {
+                "id": 12,
+                "username": "ade",
+                "display_name": "Ade Okafor",
+                "avatar_url": null,
+                "is_synthetic": true
+              },
+              "unfollowed_at": "2026-10-17T09:45:00Z"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "empty",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "items": []
+        }
+      }
+    }
+  ]
+}

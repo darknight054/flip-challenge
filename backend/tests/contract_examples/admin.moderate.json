@@ -1,0 +1,24 @@
+{
+  "endpoint": "POST /api/v1/admin/moderate",
+  "auth": "admin",
+  "cases": [
+    {
+      "name": "hide",
+      "request": {
+        "body": {
+          "subject_type": "post",
+          "subject_id": 73,
+          "action": "hide"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "subject_type": "post",
+          "subject_id": 73,
+          "moderation_status": "hidden"
+        }
+      }
+    }
+  ]
+}

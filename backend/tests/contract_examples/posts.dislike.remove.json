@@ -1,0 +1,28 @@
+{
+  "endpoint": "DELETE /api/v1/posts/{id}/dislike",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "removed",
+      "request": {
+        "path": {
+          "id": 42
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "post_id": 42,
+          "dislike_count": 2,
+          "dislike_reasons": {
+            "disagree": 1,
+            "low_effort": 0,
+            "not_for_me": 1,
+            "none": 0
+          },
+          "viewer_dislike": null
+        }
+      }
+    }
+  ]
+}

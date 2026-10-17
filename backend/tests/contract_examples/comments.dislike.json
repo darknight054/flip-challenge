@@ -1,0 +1,22 @@
+{
+  "endpoint": "PUT /api/v1/comments/{id}/dislike",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "disliked",
+      "request": {
+        "path": {
+          "id": 901
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "comment_id": 901,
+          "dislike_count": 2,
+          "viewer_disliked": true
+        }
+      }
+    }
+  ]
+}

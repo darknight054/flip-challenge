@@ -1,0 +1,80 @@
+{
+  "endpoint": "PUT /api/v1/posts/{id}/dislike",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "dislike without reason",
+      "request": {
+        "path": {
+          "id": 42
+        },
+        "body": {
+          "reason": null
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "post_id": 42,
+          "dislike_count": 3,
+          "dislike_reasons": {
+            "disagree": 1,
+            "low_effort": 0,
+            "not_for_me": 1,
+            "none": 1
+          },
+          "viewer_dislike": {
+            "reason": null
+          }
+        }
+      }
+    },
+    {
+      "name": "add a reason",
+      "request": {
+        "path": {
+          "id": 42
+        },
+        "body": {
+          "reason": "disagree"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "post_id": 42,
+          "dislike_count": 3,
+          "dislike_reasons": {
+            "disagree": 2,
+            "low_effort": 0,
+            "not_for_me": 1,
+            "none": 0
+          },
+          "viewer_dislike": {
+            "reason": "disagree"
+          }
+        }
+      }
+    },
+    {
+      "name": "own post",
+      "request": {
+        "path": {
+          "id": 301
+        },
+        "body": {
+          "reason": null
+        }
+      },
+      "response": {
+        "status": 403,
+        "body": {
+          "error": {
+            "code": "own_content",
+            "message": "You can't dislike your own post."
+          }
+        }
+      }
+    }
+  ]
+}

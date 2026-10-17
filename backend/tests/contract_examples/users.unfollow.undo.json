@@ -1,0 +1,22 @@
+{
+  "endpoint": "DELETE /api/v1/users/{username}/unfollow",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "undone",
+      "request": {
+        "path": {
+          "username": "kit"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "username": "kit",
+          "unfollowed": false,
+          "unfollowed_at": null
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "endpoint": "DELETE /api/v1/comments/{id}",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "deleted",
+      "request": {
+        "path": {
+          "id": 910
+        }
+      },
+      "response": {
+        "status": 204,
+        "body": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "endpoint": "GET /api/v1/algorithm/comparison",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "engagement vs baseline",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "dataset": {
+            "posts": 300,
+            "creators": 50,
+            "simulated_viewers": 50
+          },
+          "slate_size": 10,
+          "rankers": [
+            {
+              "key": "engagement-demo",
+              "label": "Engagement-style",
+              "demo_only": true,
+              "slots": [
+                {
+                  "position": 0,
+                  "post_id": 88,
+                  "topic": "tech",
+                  "author": {
+                    "username": "lee",
+                    "display_name": "Lee Park",
+                    "is_synthetic": true
+                  }
+                },
+                {
+                  "position": 1,
+                  "post_id": 91,
+                  "topic": "politics_society",
+                  "author": {
+                    "username": "vos",
+                    "display_name": "Ines Vos",
+                    "is_synthetic": true
+                  }
+                },
+                {
+                  "position": 2,
+                  "post_id": 95,
+                  "topic": "tech",
+                  "author": {
+                    "username": "lee",
+                    "display_name": "Lee Park",
+                    "is_synthetic": true
+                  }
+                }
+              ],
+              "metrics": {
+                "attention_gap": 0.71,
+                "topics_covered": 3,
+                "distinct_creators": 4
+              }
+            },
+            {
+              "key": "baseline-v0",
+              "label": "Serendipity",
+              "demo_only": false,
+              "slots": [
+                {
+                  "position": 0,
+                  "post_id": 233,
+                  "topic": "food",
+                  "author": {
+                    "username": "new23",
+                    "display_name": "Noor A.",
+                    "is_synthetic": true
+                  }
+                },
+                {
+                  "position": 1,
+                  "post_id": 42,
+                  "topic": "science",
+                  "author": {
+                    "username": "tomas",
+                    "display_name": "Tomas Reyes",
+                    "is_synthetic": true
+                  }
+                },
+                {
+                  "position": 2,
+                  "post_id": 57,
+                  "topic": "politics_society",
+                  "author": {
+                    "username": "ade",
+                    "display_name": "Ade Okafor",
+                    "is_synthetic": true
+                  }
+                }
+              ],
+              "metrics": {
+                "attention_gap": 0.24,
+                "topics_covered": 9,
+                "distinct_creators": 10
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

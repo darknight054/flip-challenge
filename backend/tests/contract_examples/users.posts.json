@@ -1,0 +1,50 @@
+{
+  "endpoint": "GET /api/v1/users/{username}/posts",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "first page",
+      "request": {
+        "path": {
+          "username": "tomas"
+        },
+        "query": {
+          "limit": 20
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "id": 42,
+              "author": {
+                "id": 7,
+                "username": "tomas",
+                "display_name": "Tomas Reyes",
+                "avatar_url": null,
+                "is_synthetic": true
+              },
+              "body": "The lab replicated last spring's result, at half the effect size. That's still worth knowing.",
+              "topic": "science",
+              "created_at": "2026-10-17T07:02:11Z",
+              "updated_at": null,
+              "reply_count": 4,
+              "dislike_count": 2,
+              "dislike_reasons": {
+                "disagree": 1,
+                "low_effort": 0,
+                "not_for_me": 1,
+                "none": 0
+              },
+              "viewer_dislike": null,
+              "viewer_has_unfollowed_author": false,
+              "is_own": false
+            }
+          ],
+          "next_cursor": null
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "endpoint": "GET /api/v1/feed",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "first page (new session)",
+      "request": {
+        "query": {
+          "limit": 20
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "post": {
+                "id": 42,
+                "author": {
+                  "id": 7,
+                  "username": "tomas",
+                  "display_name": "Tomas Reyes",
+                  "avatar_url": null,
+                  "is_synthetic": true
+                },
+                "body": "The lab replicated last spring's result, at half the effect size. That's still worth knowing.",
+                "topic": "science",
+                "created_at": "2026-10-17T07:02:11Z",
+                "updated_at": null,
+                "reply_count": 4,
+                "dislike_count": 2,
+                "dislike_reasons": {
+                  "disagree": 1,
+                  "low_effort": 0,
+                  "not_for_me": 1,
+                  "none": 0
+                },
+                "viewer_dislike": null,
+                "viewer_has_unfollowed_author": false,
+                "is_own": false
+              },
+              "reason_code": "underexposed",
+              "reason_text": "A voice few people have seen yet."
+            },
+            {
+              "post": {
+                "id": 57,
+                "author": {
+                  "id": 12,
+                  "username": "ade",
+                  "display_name": "Ade Okafor",
+                  "avatar_url": null,
+                  "is_synthetic": true
+                },
+                "body": "Council meetings should be streamed by default.",
+                "topic": "politics_society",
+                "created_at": "2026-10-17T05:40:00Z",
+                "updated_at": null,
+                "reply_count": 12,
+                "dislike_count": 9,
+                "dislike_reasons": {
+                  "disagree": 7,
+                  "low_effort": 0,
+                  "not_for_me": 1,
+                  "none": 1
+                },
+                "viewer_dislike": {
+                  "reason": "disagree"
+                },
+                "viewer_has_unfollowed_author": false,
+                "is_own": false
+              },
+              "reason_code": "discussion",
+              "reason_text": "Several different people are replying to this."
+            },
+            {
+              "post": {
+                "id": 61,
+                "author": {
+                  "id": 15,
+                  "username": "rin",
+                  "display_name": "Rin Sato",
+                  "avatar_url": null,
+                  "is_synthetic": true
+                },
+                "body": "Tried making miso from scratch. Six months is a long time to wait for soup.",
+                "topic": "food",
+                "created_at": "2026-10-16T21:10:00Z",
+                "updated_at": null,
+                "reply_count": 0,
+                "dislike_count": 0,
+                "dislike_reasons": {
+                  "disagree": 0,
+                  "low_effort": 0,
+                  "not_for_me": 0,
+                  "none": 0
+                },
+                "viewer_dislike": null,
+                "viewer_has_unfollowed_author": false,
+                "is_own": false
+              },
+              "reason_code": "fresh",
+              "reason_text": "A new post or a new voice."
+            },
+            {
+              "post": {
+                "id": 73,
+                "author": {
+                  "id": 21,
+                  "username": "kit",
+                  "display_name": "Kit Lowe",
+                  "avatar_url": null,
+                  "is_synthetic": true
+                },
+                "body": "Every city should have one bench that faces the wrong way, just to see what people notice.",
+                "topic": "places_travel",
+                "created_at": "2026-10-15T12:00:00Z",
+                "updated_at": null,
+                "reply_count": 3,
+                "dislike_count": 1,
+                "dislike_reasons": {
+                  "disagree": 0,
+                  "low_effort": 0,
+                  "not_for_me": 0,
+                  "none": 1
+                },
+                "viewer_dislike": null,
+                "viewer_has_unfollowed_author": false,
+                "is_own": false
+              },
+              "reason_code": "wildcard",
+              "reason_text": "Picked at random from posts you haven't seen."
+            }
+          ],
+          "session_id": "fs_8c1d2e7a",
+          "next_cursor": "eyJzIjoiZnNfOGMxZDJlN2EiLCJwIjoxfQ",
+          "end_of_feed": false,
+          "algorithm_version": "baseline-v0"
+        }
+      }
+    },
+    {
+      "name": "last page",
+      "request": {
+        "query": {
+          "cursor": "eyJzIjoiZnNfOGMxZDJlN2EiLCJwIjoxfQ",
+          "limit": 20
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            {
+              "post": {
+                "id": 88,
+                "author": {
+                  "id": 21,
+                  "username": "kit",
+                  "display_name": "Kit Lowe",
+                  "avatar_url": null,
+                  "is_synthetic": true
+                },
+                "body": "Ran my first 10k at 54 minutes. Slower than the plan, faster than last year.",
+                "topic": "sport",
+                "created_at": "2026-10-15T12:00:00Z",
+                "updated_at": null,
+                "reply_count": 0,
+                "dislike_count": 0,
+                "dislike_reasons": {
+                  "disagree": 0,
+                  "low_effort": 0,
+                  "not_for_me": 0,
+                  "none": 0
+                },
+                "viewer_dislike": null,
+                "viewer_has_unfollowed_author": false,
+                "is_own": false
+              },
+              "reason_code": "wildcard",
+              "reason_text": "Picked at random from posts you haven't seen."
+            }
+          ],
+          "session_id": "fs_8c1d2e7a",
+          "next_cursor": null,
+          "end_of_feed": true,
+          "algorithm_version": "baseline-v0"
+        }
+      }
+    },
+    {
+      "name": "caught up (nothing left)",
+      "request": {
+        "query": {
+          "limit": 20
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [],
+          "session_id": "fs_91aa03bc",
+          "next_cursor": null,
+          "end_of_feed": true,
+          "algorithm_version": "baseline-v0"
+        }
+      }
+    },
+    {
+      "name": "not logged in",
+      "request": {},
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "unauthenticated",
+            "message": "Log in to continue."
+          }
+        }
+      }
+    }
+  ]
+}

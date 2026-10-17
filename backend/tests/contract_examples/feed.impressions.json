@@ -1,0 +1,31 @@
+{
+  "endpoint": "POST /api/v1/feed/impressions",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "batch",
+      "request": {
+        "body": {
+          "session_id": "fs_8c1d2e7a",
+          "items": [
+            {
+              "post_id": 42,
+              "position": 0
+            },
+            {
+              "post_id": 57,
+              "position": 1
+            }
+          ]
+        }
+      },
+      "response": {
+        "status": 202,
+        "body": {
+          "accepted": 1,
+          "duplicates": 1
+        }
+      }
+    }
+  ]
+}

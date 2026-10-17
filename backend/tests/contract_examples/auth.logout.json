@@ -1,0 +1,14 @@
+{
+  "endpoint": "POST /api/v1/auth/logout",
+  "auth": "required",
+  "cases": [
+    {
+      "name": "ok",
+      "request": {},
+      "response": {
+        "status": 204,
+        "body": null
+      }
+    }
+  ]
+}
