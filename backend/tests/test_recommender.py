@@ -1,10 +1,11 @@
 from datetime import timedelta
 
 from app.core.time import utcnow
-from app.recommendations.base import Candidate
+from app.recommendations.base import Candidate, ViewerHistory
 from app.recommendations.baseline import BaselineV0, quota_counts
 from app.recommendations.comparison import gini, simulate
 from app.recommendations.engagement import EngagementDemo
+from app.recommendations.seen_least import SeenLeastV1
 
 NOW = utcnow()
 QUOTAS = {"fresh": 0.3, "underexposed": 0.3, "discussion": 0.2, "wildcard": 0.2}
@@ -91,3 +92,39 @@ def test_gini() -> None:
     assert gini([1, 1, 1, 1]) == 0.0
     assert gini([0, 0, 0, 10]) == 0.75
     assert gini([]) == 0.0
+
+
+# --- seen-least-v1 (Q18) ------------------------------------------------------------------------------
+
+
+def history(topic_views: dict[str, int], author_views: dict[int, int] | None = None):
+    return ViewerHistory(topic_views=topic_views, author_views=author_views or {})
+
+
+def test_seen_least_quotas_make_room_for_the_new_pool() -> None:
+    quotas = SeenLeastV1(QUOTAS).quotas
+    assert abs(sum(quotas.values()) - 1) < 1e-9 and quotas["outside_your_usual"] == 0.2
+    assert quota_counts(quotas, 20) == {
+        "fresh": 5,
+        "underexposed": 5,
+        "discussion": 3,
+        "wildcard": 3,
+        "outside_your_usual": 4,
+    }
+
+
+def test_outside_your_usual_avoids_what_you_have_seen_most() -> None:
+    by_id = {c.post_id: c for c in community()}
+    seen_a_lot = history({"science": 30, "tech": 20, "food": 1}, {0: 9, 1: 9})
+    for seed in range(5):
+        slate = SeenLeastV1(QUOTAS).build_slate(community(), 20, seed=seed, now=NOW, history=seen_a_lot)
+        outside = [by_id[r.post_id] for r in slate if r.reason_code == "outside_your_usual"]
+        assert len(outside) == 4
+        assert not {"science", "tech"} & {c.topic for c in outside}
+        assert not {0, 1} & {c.author_id for c in outside}
+
+
+def test_outside_your_usual_waits_for_enough_history() -> None:
+    for h in (None, history({"science": 2})):
+        slate = SeenLeastV1(QUOTAS).build_slate(community(), 20, seed=1, now=NOW, history=h)
+        assert len(slate) == 20 and all(r.reason_code != "outside_your_usual" for r in slate)

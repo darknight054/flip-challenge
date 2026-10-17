@@ -5,11 +5,11 @@ from collections import Counter, defaultdict
 from collections.abc import Callable, Sequence
 from datetime import datetime
 
-from app.recommendations.base import Candidate, RankedPost
+from app.recommendations.base import Candidate, RankedPost, ViewerHistory
 
 POOL_ORDER = ("fresh", "underexposed", "discussion", "wildcard")
 # Where to look when a pool runs dry. Labels stay honest: an item is tagged with the pool it came from.
-FALLBACK_ORDER = ("fresh", "wildcard", "underexposed", "discussion")
+FALLBACK_ORDER = ("fresh", "wildcard", "underexposed", "discussion", "outside_your_usual")
 
 
 def _age_hours(candidate: Candidate, now: datetime) -> float:
@@ -29,7 +29,8 @@ def quota_counts(quotas: dict[str, float], count: int) -> dict[str, int]:
     total = sum(quotas.values()) or 1.0
     raw = {code: count * share / total for code, share in quotas.items()}
     counts = {code: int(value) for code, value in raw.items()}
-    leftovers = sorted(raw, key=lambda code: (-(raw[code] - counts[code]), POOL_ORDER.index(code)))
+    order = list(quotas)
+    leftovers = sorted(raw, key=lambda code: (-(raw[code] - counts[code]), order.index(code)))
     for code in leftovers[: count - sum(counts.values())]:
         counts[code] += 1
     return counts
@@ -90,19 +91,31 @@ class BaselineV0:
             out.extend(by_topic[t].pop() for t in topics if by_topic[t])
         return out
 
-    # --- slate assembly ---------------------------------------------------------------------------
-
-    def build_slate(self, candidates: Sequence[Candidate], count: int, seed: int, now: datetime) -> list[RankedPost]:
-        cands = sorted(candidates, key=lambda c: c.post_id)
-        if not cands or count <= 0:
-            return []
-        rng = random.Random(seed)
-        pools = {
+    def _pools(
+        self, cands: list[Candidate], rng: random.Random, now: datetime, history: ViewerHistory | None
+    ) -> dict[str, list[Candidate]]:
+        return {
             "fresh": self._fresh(cands, rng, now),
             "underexposed": self._underexposed(cands, rng, now),
             "discussion": self._discussion(cands, rng, now),
             "wildcard": self._wildcard(cands, rng, now),
         }
+
+    # --- slate assembly ---------------------------------------------------------------------------
+
+    def build_slate(
+        self,
+        candidates: Sequence[Candidate],
+        count: int,
+        seed: int,
+        now: datetime,
+        history: ViewerHistory | None = None,
+    ) -> list[RankedPost]:
+        cands = sorted(candidates, key=lambda c: c.post_id)
+        if not cands or count <= 0:
+            return []
+        rng = random.Random(seed)
+        pools = self._pools(cands, rng, now, history)
         slots = [code for code, n in quota_counts(self.quotas, count).items() for _ in range(n)]
         rng.shuffle(slots)
 
@@ -111,7 +124,7 @@ class BaselineV0:
         picked: list[tuple[Candidate, str]] = []
 
         def take(code: str, author_limit: int | None) -> Candidate | None:
-            for c in pools[code]:
+            for c in pools.get(code, ()):
                 if c.post_id in used:
                     continue
                 if author_limit is not None and per_author[c.author_id] >= author_limit:

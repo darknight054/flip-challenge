@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GlassPanel } from "@/components/glass-panel";
 import { ReasonPill } from "@/components/feed-reason-badge";
 import { RecipeBar } from "@/components/recipe-bar";
-import { SyntheticBadge } from "@/components/synthetic-badge";
 import { useRecipe } from "@/hooks/queries";
 import { useHydrated } from "@/hooks/use-hydrated";
 import { api } from "@/lib/api";
@@ -47,8 +46,15 @@ function Pools() {
   const hydrated = useHydrated();
   if (!hydrated || recipe.isPending) return <Skeleton className="h-28 w-full" />;
   if (recipe.isError) return <LoadError onRetry={() => recipe.refetch()} />;
+  const personal = recipe.data.pools.some((pool) => pool.code === "outside_your_usual");
   return (
     <>
+      <p className="mb-3 text-ui text-muted-foreground">
+        {recipe.data.pools.length} pools, mixed on every page.{" "}
+        <span className="gloss-pill inline-flex h-5 items-center rounded-full bg-white/70 px-2 text-meta font-semibold text-foreground">
+          {recipe.data.active_version}
+        </span>
+      </p>
       <RecipeBar pools={recipe.data.pools} />
       <ul className="mt-4 space-y-3">
         {recipe.data.pools.map((pool) => (
@@ -59,6 +65,12 @@ function Pools() {
           </li>
         ))}
       </ul>
+      {personal ? (
+        <p className="mt-4 text-ui">
+          The only thing about you it uses is what you&apos;ve already seen in the last week, and only to show you
+          something different. Never what you disliked or who you unfollowed.
+        </p>
+      ) : null}
     </>
   );
 }
@@ -74,14 +86,7 @@ function RankerCard({ ranker, className }: { ranker: Ranker; className?: string 
         className,
       )}
     >
-      <h3 className="flex items-center gap-2 text-heading font-semibold">
-        {ranker.label}
-        {flat ? (
-          <span className="gloss-pill inline-flex h-5 items-center rounded-full border border-input/50 bg-white/70 px-2 text-[12px] font-semibold text-muted-foreground">
-            demo
-          </span>
-        ) : null}
-      </h3>
+      <h3 className="flex items-center gap-2 text-heading font-semibold">{ranker.label}</h3>
       <ol className="mt-3 space-y-1">
         {ranker.slots.slice(0, SLOTS_SHOWN).map((slot) => (
           <li key={slot.position} className="flex items-center justify-between gap-3 text-meta">
@@ -105,8 +110,8 @@ function RankerCard({ ranker, className }: { ranker: Ranker; className?: string 
 function Comparison() {
   const comparison = useQuery({ queryKey: qk.comparison, queryFn: api.comparison, staleTime: 10 * 60_000 });
   const title = comparison.data
-    ? `Same ${comparison.data.dataset.posts} demo posts, ranked two ways`
-    : "Same demo posts, ranked two ways";
+    ? `Same ${comparison.data.dataset.posts} posts, ranked two ways`
+    : "Same posts, ranked two ways";
 
   return (
     <Section id="comparison" title={title}>
@@ -136,7 +141,7 @@ function Comparison() {
             ))}
           </Tabs>
           <p className="mt-4 text-meta text-muted-foreground">
-            The engagement ranker uses demo data only. It&apos;s never a feed option. Attention gap measures how
+            The engagement-style ranking is a simulation for comparison. It&apos;s never a feed option. Attention gap measures how
             unevenly attention is spread across creators: lower is more even.
           </p>
         </>
@@ -158,10 +163,6 @@ function NeverUsed() {
         </ul>
       ) : null}
       <p className="mt-3 text-ui">Disagreeing never lowers a post&apos;s reach.</p>
-      <p className="mt-3 flex flex-wrap items-center gap-2 text-ui text-muted-foreground">
-        <SyntheticBadge />
-        Accounts marked demo were generated for this prototype. They aren&apos;t real people.
-      </p>
     </Section>
   );
 }
@@ -179,7 +180,7 @@ export function AlgorithmExplainer() {
           chance, then it ends.
         </p>
       </header>
-      <Section id="pools" title="Each feed is built from four pools">
+      <Section id="pools" title="How each feed is built">
         <Pools />
       </Section>
       <Comparison />

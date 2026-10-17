@@ -200,7 +200,7 @@
 }
 
 @utility gloss-pill {
-  /* reason badges, demo badge, chips: tint + top sheen */
+  /* reason badges, chips: tint + top sheen */
   background-image: linear-gradient(rgb(255 255 255 / 0.65), rgb(255 255 255 / 0) 55%);
   box-shadow:
     inset 0 0 0 1px rgb(255 255 255 / 0.8),

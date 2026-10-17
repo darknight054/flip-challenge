@@ -2,12 +2,15 @@
 
 from datetime import timedelta
 
+import pytest
 from sqlmodel import select
 
+from app.core.config import Settings
 from app.core.time import utcnow
+from app.main import create_app
 from app.models import FeedDelivery, User
 from app.recommendations.registry import get_recommender
-from app.services.feed import eligible_candidates
+from app.services.feed import eligible_candidates, viewer_history
 from tests.conftest import API, post
 
 TOPICS = ["science", "tech", "food", "sport", "health", "culture_arts"]
@@ -187,3 +190,61 @@ def test_one_viewers_actions_never_change_another_viewers_pool(user_client, db, 
     # dislikes — can alter which posts Bob may see or how they're described.
     strip = lambda pool: [(c.post_id, c.author_id, c.topic, c.impressions) for c in pool]  # noqa: E731
     assert strip(before) == strip(after)
+
+
+# --- seen-least-v1: switchable, and still no clustering (Q18) ---------------------------------------
+
+
+def test_active_algorithm_is_switchable_and_validated(tmp_path) -> None:
+    assert create_app(Settings(database_url=f"sqlite:///{tmp_path / 'a.db'}", active_algorithm="seen-least-v1"))
+    with pytest.raises(ValueError, match="SD_ACTIVE_ALGORITHM"):
+        create_app(Settings(database_url=f"sqlite:///{tmp_path / 'b.db'}", active_algorithm="nope"))
+
+
+def test_seen_least_kicks_in_once_you_have_scrolled(user_client, app) -> None:
+    app.state.settings.active_algorithm = "seen-least-v1"
+    populate(user_client)
+    viewer, _ = user_client("viewer")
+
+    recipe = viewer.get(f"{API}/algorithm/recipe").json()
+    assert recipe["active_version"] == "seen-least-v1"
+    assert [p["code"] for p in recipe["pools"]][-1] == "outside_your_usual"
+
+    first = viewer.get(f"{API}/feed", params={"limit": 10}).json()
+    assert first["algorithm_version"] == "seen-least-v1"
+    assert all(i["reason_code"] != "outside_your_usual" for i in first["items"])  # no history yet
+    seen = [{"post_id": i["post"]["id"], "position": n} for n, i in enumerate(first["items"])]
+    viewer.post(f"{API}/feed/impressions", json={"session_id": first["session_id"], "items": seen})
+
+    second = viewer.get(f"{API}/feed", params={"limit": 10, "cursor": first["next_cursor"]}).json()
+    outside = [i for i in second["items"] if i["reason_code"] == "outside_your_usual"]
+    assert outside and outside[0]["reason_text"] == "A topic or voice you haven't seen much of lately."
+
+
+def test_seen_least_counterfactual_same_views_same_ranking(user_client, db, app) -> None:
+    app.state.settings.active_algorithm = "seen-least-v1"
+    clients = populate(user_client)
+    alice, _ = user_client("alice")
+    bob, _ = user_client("bob")
+    # Same views for both, different unfollow/dislike histories that remove the same posts.
+    viewed = [p["id"] for p in clients["author1"].get(f"{API}/users/author1/posts").json()["items"]]
+    viewed += [p["id"] for p in clients["author2"].get(f"{API}/users/author2/posts").json()["items"]]
+    for client in (alice, bob):
+        client.post(f"{API}/feed/impressions", json={"items": [{"post_id": pid} for pid in viewed]})
+    alice.put(f"{API}/users/author0/unfollow")
+    for p in clients["author0"].get(f"{API}/users/author0/posts").json()["items"]:
+        bob.put(f"{API}/posts/{p['id']}/dislike", json={"reason": "not_for_me"})
+
+    now = utcnow()
+    users = {u.username: u for u in db.exec(select(User)).all()}
+    settings = app.state.settings
+    pool_a = eligible_candidates(db, users["alice"], None, now, settings)
+    pool_b = eligible_candidates(db, users["bob"], None, now, settings)
+    hist_a, hist_b = viewer_history(db, users["alice"], now, settings), viewer_history(db, users["bob"], now, settings)
+    assert pool_a == pool_b and hist_a == hist_b and hist_a.total == len(viewed)
+
+    recommender = get_recommender("seen-least-v1", settings)
+    for seed in range(5):
+        a = recommender.build_slate(pool_a, 10, seed, now, history=hist_a)
+        assert a == recommender.build_slate(pool_b, 10, seed, now, history=hist_b)
+        assert any(r.reason_code == "outside_your_usual" for r in a)

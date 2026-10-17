@@ -44,6 +44,55 @@
           ]
         }
       }
+    },
+    {
+      "name": "seen-least-v1 active",
+      "request": {},
+      "response": {
+        "status": 200,
+        "body": {
+          "active_version": "seen-least-v1",
+          "pools": [
+            {
+              "code": "fresh",
+              "label": "Fresh",
+              "share": 0.24,
+              "description": "New posts and new voices."
+            },
+            {
+              "code": "underexposed",
+              "label": "Underexposed",
+              "share": 0.24,
+              "description": "Voices few people have seen."
+            },
+            {
+              "code": "discussion",
+              "label": "Discussion",
+              "share": 0.16,
+              "description": "Replies from 3+ different people."
+            },
+            {
+              "code": "wildcard",
+              "label": "Wildcard",
+              "share": 0.16,
+              "description": "Picked at random."
+            },
+            {
+              "code": "outside_your_usual",
+              "label": "Outside your usual",
+              "share": 0.2,
+              "description": "Topics and voices you've seen least lately."
+            }
+          ],
+          "never_used": [
+            "Likes (there are none)",
+            "Who you unfollowed",
+            "Who disliked what",
+            "Dislike counts",
+            "Popularity of any kind"
+          ]
+        }
+      }
     }
   ]
 }

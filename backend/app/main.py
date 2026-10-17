@@ -5,6 +5,7 @@ from app.core.config import Settings, get_settings
 from app.core.errors import error_body, install_error_handlers
 from app.core.ratelimit import RateLimiter
 from app.db.engine import make_engine
+from app.recommendations.registry import FEED_VERSIONS
 from app.routers import auth, comments, feed, me, meta, moderation, posts, users
 
 UNSAFE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
@@ -12,6 +13,8 @@ UNSAFE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
+    if settings.active_algorithm not in FEED_VERSIONS:
+        raise ValueError(f"SD_ACTIVE_ALGORITHM must be one of {FEED_VERSIONS}, got {settings.active_algorithm!r}")
     app = FastAPI(
         title="Serendipity API",
         version=settings.version,

@@ -4,7 +4,7 @@ export type TopicSlug = "science" | "tech" | "politics_society" | "culture_arts"
                | "food" | "places_travel" | "work_money" | "health" | "everyday_life";
 export type DislikeReason = "disagree" | "low_effort" | "not_for_me";
 export type ReasonCode = "fresh" | "underexposed" | "discussion" | "wildcard"
-                | "outside_your_usual" | "contested";            // last two: Phase 2
+                | "outside_your_usual" | "contested";            // outside_your_usual: seen-least-v1; contested: Phase 2
 
 export interface AuthorSummary { id: number; username: string; display_name: string;
                           avatar_url: string | null; is_synthetic: boolean }

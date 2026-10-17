@@ -21,12 +21,19 @@ class Settings(BaseSettings):
     rate_limits_enabled: bool = True
 
     # Recommender settings (PLAN §3.2, Q21). Quotas are config, not constants.
+    # Switch versions with SD_ACTIVE_ALGORITHM (one of recommendations.registry.FEED_VERSIONS).
     active_algorithm: str = "baseline-v0"
     feed_quotas: dict[str, float] = {"fresh": 0.3, "underexposed": 0.3, "discussion": 0.2, "wildcard": 0.2}
     feed_session_ttl_hours: int = 6
     resurface_unseen_after_hours: int = 24
     cold_start_impressions: int = 5
     discussion_min_commenters: int = 3
+
+    # seen-least-v1 (Q18): share of each page for "Outside your usual", how far back the viewer's own views
+    # count, and how many recent views are needed before the pool switches on.
+    seen_least_share: float = 0.2
+    seen_least_window_days: int = 7
+    seen_least_min_views: int = 5
 
 
 @lru_cache

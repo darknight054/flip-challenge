@@ -17,7 +17,7 @@ Requires [uv](https://docs.astral.sh/uv/), Node 20+ and pnpm.
 cd backend
 uv sync
 uv run alembic upgrade head
-uv run python -m scripts.seed --reset     # demo community; log in as demo / serendipity-demo
+uv run python -m scripts.seed --reset     # sample community; log in as demo / serendipity-demo
 uv run fastapi dev app/main.py
 
 # Web app on http://localhost:3000 (proxies /api/v1 to the API)
@@ -25,6 +25,8 @@ cd frontend
 pnpm install
 pnpm dev
 ```
+
+Switch the feed recommender with `SD_ACTIVE_ALGORITHM=seen-least-v1` (or `baseline-v0`, the default) in `backend/.env`, then restart the API.
 
 Tests: `cd backend && uv run pytest` · Lint: `uv run ruff check .` and `pnpm lint`.
 
@@ -36,4 +38,3 @@ Tests: `cd backend && uv run pytest` · Lint: `uv run ruff check .` and `pnpm li
 | `frontend/` | Next.js App Router + Tailwind + shadcn/ui, Frutiger Aero theme |
 | `backend/tests/contract_examples/` | Logged request/response examples for every endpoint; the backend tests validate them against the real schemas |
 
-Accounts marked "demo" are synthetic seed data, not real people.

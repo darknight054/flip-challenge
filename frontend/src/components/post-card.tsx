@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FeedReasonBadge } from "@/components/feed-reason-badge";
 import { PostActions } from "@/components/post-actions";
 import { PostMenu } from "@/components/post-menu";
-import { SyntheticBadge } from "@/components/synthetic-badge";
 import { UnfollowDialog } from "@/components/unfollow-dialog";
 import { UserAvatar } from "@/components/user-avatar";
 import { topicLabel } from "@/lib/constants";
@@ -78,7 +77,6 @@ export function PostCard({ post, variant, reason, onReply }: PostCardProps) {
                   >
                     {author.display_name}
                   </Link>
-                  {author.is_synthetic ? <SyntheticBadge /> : null}
                   <span>@{author.username}</span>
                   <span aria-hidden="true">·</span>
                   <time dateTime={post.created_at} title={fullDate(post.created_at)}>

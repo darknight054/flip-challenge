@@ -8,7 +8,6 @@ import { EditProfileDialog } from "@/components/edit-profile-dialog";
 import { EveryoneBubbles, EveryoneStat } from "@/components/everyone-stat";
 import { BackButton, GlassPanel } from "@/components/glass-panel";
 import { FeedSkeleton, PostCard } from "@/components/post-card";
-import { SyntheticBadge } from "@/components/synthetic-badge";
 import { UnfollowDialog } from "@/components/unfollow-dialog";
 import { UserAvatar } from "@/components/user-avatar";
 import { api, errorMessage } from "@/lib/api";
@@ -45,7 +44,6 @@ function ProfileHeader({ profile }: { profile: Profile }) {
       )}
       <h1 className="mt-3 flex flex-wrap items-center gap-2 text-title font-bold">
         {user.display_name}
-        {user.is_synthetic ? <SyntheticBadge /> : null}
       </h1>
       <p className="text-meta text-muted-foreground">@{user.username}</p>
       {user.bio ? <p className="mt-2 text-ui break-words whitespace-pre-wrap">{user.bio}</p> : null}

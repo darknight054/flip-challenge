@@ -20,7 +20,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/component
 import { Textarea } from "@/components/ui/textarea";
 import { PostCardSkeleton } from "@/components/post-card";
 import { MoreActionsTrigger, ReportSubmenu, sendReport, useMenuDialogFocus } from "@/components/post-menu";
-import { SyntheticBadge } from "@/components/synthetic-badge";
 import { UserAvatar } from "@/components/user-avatar";
 import { useMe } from "@/hooks/queries";
 import { useCommentDislike } from "@/hooks/use-post-dislike";
@@ -279,7 +278,6 @@ function CommentView({ comment, onReply, note }: CommentViewProps) {
             <Link href={`/u/${author.username}`} className="text-ui font-semibold text-foreground hover:underline">
               {author.display_name}
             </Link>
-            {author.is_synthetic ? <SyntheticBadge /> : null}
             <span>@{author.username}</span>
             <span aria-hidden="true">·</span>
             <time dateTime={comment.created_at} title={fullDate(comment.created_at)}>

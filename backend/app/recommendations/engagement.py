@@ -4,13 +4,21 @@ import math
 from collections.abc import Sequence
 from datetime import datetime
 
-from app.recommendations.base import Candidate, RankedPost
+from app.recommendations.base import Candidate, RankedPost, ViewerHistory
 
 
 class EngagementDemo:
     version = "engagement-demo"
+    quotas: dict[str, float] = {}
 
-    def build_slate(self, candidates: Sequence[Candidate], count: int, seed: int, now: datetime) -> list[RankedPost]:
+    def build_slate(
+        self,
+        candidates: Sequence[Candidate],
+        count: int,
+        seed: int,
+        now: datetime,
+        history: ViewerHistory | None = None,
+    ) -> list[RankedPost]:
         def score(c: Candidate) -> float:
             age_hours = max((now - c.created_at).total_seconds() / 3600, 0.0)
             return (

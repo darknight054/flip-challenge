@@ -1,6 +1,7 @@
 """Feed sessions, stable pagination, eligibility filtering and impressions (PLAN §3.2)."""
 
 import secrets
+from collections import Counter
 from datetime import datetime, timedelta
 
 from sqlmodel import Session, col, or_, select
@@ -9,7 +10,7 @@ from app.core.config import Settings
 from app.core.errors import ApiError
 from app.core.time import utcnow
 from app.models import FeedDelivery, FeedSession, Impression, Post, PostDislike, User
-from app.recommendations.base import Candidate
+from app.recommendations.base import Candidate, ViewerHistory
 from app.recommendations.features import load_candidates
 from app.recommendations.registry import FEED_VERSIONS, get_recommender
 from app.schemas import FeedItem, FeedPage, ImpressionBatchIn, ImpressionResult
@@ -22,7 +23,22 @@ REASON_TEXT = {
     "underexposed": "A voice few people have seen yet.",
     "discussion": "Several different people are replying to this.",
     "wildcard": "Picked at random from posts you haven't seen.",
+    "outside_your_usual": "A topic or voice you haven't seen much of lately.",
 }
+
+
+def viewer_history(db: Session, viewer: User, now: datetime, settings: Settings) -> ViewerHistory:
+    """The viewer's own views over the last few days, from impressions only (Q18)."""
+    since = now - timedelta(days=settings.seen_least_window_days)
+    rows = db.exec(
+        select(Post.topic, Post.author_id)
+        .join(Impression, col(Impression.post_id) == col(Post.id))
+        .where(Impression.viewer_id == viewer.id, col(Impression.first_visible_at) > since)
+    ).all()
+    return ViewerHistory(
+        topic_views=dict(Counter(topic for topic, _ in rows)),
+        author_views=dict(Counter(author for _, author in rows)),
+    )
 
 
 def eligible_candidates(
@@ -98,7 +114,10 @@ def get_feed_page(
     else:
         candidates = eligible_candidates(db, viewer, session.id, now, settings)
         recommender = get_recommender(session.algorithm_version, settings)
-        slate = recommender.build_slate(candidates, limit, seed=_page_seed(session.random_seed, page), now=now)
+        history = viewer_history(db, viewer, now, settings)
+        slate = recommender.build_slate(
+            candidates, limit, seed=_page_seed(session.random_seed, page), now=now, history=history
+        )
         for position, item in enumerate(slate):
             db.add(
                 FeedDelivery(

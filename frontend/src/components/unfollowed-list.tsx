@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { GlassPanel } from "@/components/glass-panel";
 import { Orb } from "@/components/orb";
 import { FeedSkeleton } from "@/components/post-card";
-import { SyntheticBadge } from "@/components/synthetic-badge";
 import { UserAvatar } from "@/components/user-avatar";
 import { useUnfollow } from "@/hooks/use-unfollow";
 import { api } from "@/lib/api";
@@ -65,7 +64,6 @@ export function UnfollowedList() {
                   <Link href={`/u/${user.username}`} className="truncate font-semibold hover:underline">
                     {user.display_name}
                   </Link>
-                  {user.is_synthetic ? <SyntheticBadge /> : null}
                 </p>
                 <p className="text-meta text-muted-foreground">
                   @{user.username} · <time dateTime={unfollowed_at}>{dayMonth(unfollowed_at)}</time>

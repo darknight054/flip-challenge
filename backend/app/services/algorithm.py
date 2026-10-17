@@ -26,6 +26,7 @@ POOL_COPY = {
     "underexposed": ("Underexposed", "Voices few people have seen."),
     "discussion": ("Discussion", "Replies from 3+ different people."),
     "wildcard": ("Wildcard", "Picked at random."),
+    "outside_your_usual": ("Outside your usual", "Topics and voices you've seen least lately."),
 }
 NEVER_USED = [
     "Likes (there are none)",
@@ -43,9 +44,9 @@ def recipe(settings: Settings) -> Recipe:
     return Recipe(
         active_version=settings.active_algorithm,
         pools=[
-            Pool(code=code, label=POOL_COPY[code][0], share=share, description=POOL_COPY[code][1])
-            for code, share in settings.feed_quotas.items()
-            if code in POOL_COPY
+            Pool(code=code, label=POOL_COPY[code][0], share=round(share, 4), description=POOL_COPY[code][1])
+            for code, share in get_recommender(settings.active_algorithm, settings).quotas.items()
+            if code in POOL_COPY and share > 0
         ],
         never_used=NEVER_USED,
     )
