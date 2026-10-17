@@ -44,7 +44,6 @@ NEVER_USED = [
     "Likes (there are none)",
     "Who you unfollowed",
     "Who disliked what",
-    "Dislike counts",
     "Popularity of any kind",
 ]
 SIMULATED_VIEWERS = 50
